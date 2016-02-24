@@ -19,247 +19,41 @@
 	"showAll": "",
 	"symbolizeBy": [{"name": "Project Type", "field": "Primary_Cat", "id": 1}, {"name": "Objective", "field": "Secondary_Cat", "id": 2}, {"name": "Strategy", "field": "Action_", "id": 3}, {"name": "Town", "field": "Town", "id": 4}],
 	"queryFields": [{"name": "Project Type", "field": "Primary_Cat"}, {"name": "Objective", "field": "Secondary_Cat"}, {"name": "Strategy", "field": "Action_"}, {"name": "Town", "field": "Town"}],
-	"controls": [
-		{
-			"type": "text",
-			"text": "Use the menu below to change symbology of the natural defense project points. Click any point to learn more about a project."			
-		},
-		{ 
-			"type": "select1",
-			"name": "selectSym",
-			"header": "Symbolize Projects By",
-			"options": [
-				{
-					"label": "Field",
-					"value": "field",
-					"selected": false,
-					"disabled": "disabled"
+	"infos" : [
+				{"name":"Overview", "fields":[
+					{name: "Project Name", field: "Project_Name"},
+					{name: "Project Type", field: ""},
+					{name: "Project Objective", field: ""},
+					{name: "Strategy", field: ""},
+					{name: "Town", field: "Town"},
+					{name: "Geo-location", field: "!Point_X!, !Point_Y!"}
+					]
 				},
-				{
-					"label": "Habitat",
-					"value": "0",
-					"selected": false
+				{"name":"Project Scope", "fields":[
+					{name: "Name", field: "Project_Name"},
+					{name: "Address", field: "Address"},
+					{name: "Description", field: "Project_Desc"},
+					{name: "Funding", field: "Funding"},
+					{name: "Green Infrastructure", field: "Green_Infra"}
+					]
 				},
-				{
-					"label": "Project Objective",
-					"value": "1",
-					"selected": false
+				{"name":"Site Characteristics", "fields":[
+					{name: "Primary Asset Exposed", field: ""},
+					{name: "Secondary Asset Exposed", field: ""},
+					{name: "FEMA Flood Zones (ft.) ref. NAVD88", field: ""},
+					{name: "Base Flood Elevation (ft.) ref. NAVD88", field: ""},
+					{name: "Low to Moderate Income Percentage (within block group)", field: ""},
+					{name: "Coastal Jurisdiction Line: (ft.) ref. NAVD88", field: ""},
+					{name: "Watershed (HUC-12)", field: ""},
+					{name: "County", field: ""}
+					]
 				},
-				{
-					"label": "Coastal Classification",
-					"value": "2",
-					"selected": false
-				},
-				{
-					"label": "Site Exposure",
-					"value": "3",
-					"selected": false
+				{"name":"Supplementary Info", "fields":[
+					{name: "Project Name", field: "Project_Name"},
+					{name: "Photos", field: ""},
+					{name: "Sources - References", field: ""},
+					{name: "Links", field: ""}
+					]
 				}
-			]
-		},
-		{
-			"type": "select",
-			"name": "fieldSelect",
-			"header": "And/Or Show Projects Where",
-			"name1": "attSelect",
-			"options": [
-				{
-					"label": "Field",
-					"value": "field",
-					"selected": false,
-					"disabled": "disabled"
-				},
-				{
-					"label": "Habitat",
-					"value": "Habitat",
-					"selected": false
-				},
-				{
-					"label": "Project Objective",
-					"value": "ProjectObjective",
-					"selected": false
-				},
-				{
-					"label": "Coastal Classification",
-					"value": "Classification",
-					"selected": false
-				},
-				{
-					"label": "Site Exposure",
-					"value": "SiteExposure",
-					"selected": false
-				}
-			],
-			"AttHolder": [
-				{
-					"label": "Attribute",
-					"value": "none",
-					"selected": "false",
-					"disabled": "disabled",
-					"display": "inline-block;"
-				}
-			],
-			"Habitat": [
-				{
-					"label": "Attribute", 
-					"value": "none", 
-					"selected": false, 
-					"disabled": "disabled",
-					"display": "none !important;"
-				},
-				{
-					"label": "Coastal Dunes", 
-					"value": "Coastal Dunes",
-					"selected": false
-				},
-				{
-					"label": "Coral Reefs",
-					"value": "Coral Reefs", 
-					"selected": false
-				},
-				{
-					"label": "Mangroves",
-					"value": "Mangroves",
-					"selected": false
-				},
-				{
-					"label": "Oyster Reefs", 
-					"value": "Oyster Reefs", 
-					"selected": false
-				},
-				{
-					"label": "Reed (Freshwater)", 
-					"value": "Reed (Freshwater)", 
-					"selected": false
-				},
-				{
-					"label": "Salt-marsh", 
-					"value": "Salt-marsh", 
-					"selected": false
-				},
-				{
-					"label": "Seagrass", 
-					"value": "Seagrass", 
-					"selected": false
-				},
-				{	"label": "Wetlands",
-					"value": "Wetlands",
-					"selected": false
-				},
-				{
-					"label": "Willow", 
-					"value": "Willow", 
-					"selected": false
-				}
-			],
-			"ProjectObjective": [
-				{
-					"label": "Attribute", 
-					"value": "none", 
-					"selected": false, 
-					"disabled": "disabled",
-					"display": "none !important"
-				},
-				{
-					"label": "Erosion Mitigation", 
-					"value": "Erosion Mitigation", 
-					"selected": false
-				},
-				{
-					"label": "Flood Defense", 
-					"value": "Flood Defense", 
-					"selected": false
-				},
-				{
-					"label": "Wave Attenuation", 
-					"value": "Wave Attenuation", 
-					"selected": false
-				}
-			],
-			"Classification": [
-				{
-					"label": "Attribute", 
-					"value": "none", 
-					"selected": false, 
-					"disabled": "disabled",
-					"display": "none !important;"
-				},
-				{	
-					"label": "Bay", 
-					"value": "Bay", 
-					"selected": false
-				},
-				{
-					"label": "Estuary", 
-					"value": "Estuary", 
-					"selected": false
-				},
-				{
-					"label": "Lagoon", 
-					"value": "Lagoon", 
-					"selected": false
-				},
-				{
-					"label": "Open Coast", 
-					"value": "Open Coast", 
-					"selected": false
-				},
-				{
-					"label": "River", 
-					"value": "River", 
-					"selected": false
-				}
-			],
-			"SiteExposure": [
-				{
-					"label": "Attribute", 
-					"value": "none", 
-					"selected": false, 
-					"disabled": "disabled",
-					"display": "none !important;"
-				},
-				{
-					"label": "Low", 
-					"value": "Low", 
-					"selected": false
-				},
-				{
-					"label": "Moderate",
-					"value": "Moderate", 
-					"selected": false
-				},
-				{
-					"label": "High", 
-					"value": "High", 
-					"selected": false
-				},
-				{
-					"label": "Very High", 
-					"value": "Very High", 
-					"selected": false
-				}
-			]
-		},
-		{
-			"type": "tabContainer",
-			"name": "tb",
-			"title1": "Overview",
-			"title2": "Effectiveness",
-			"title3": "Site Characteristics"
-		},
-		{
-			type: "featureLayer",
-			"url": "http://dev.services2.coastalresilience.org/arcgis/rest/services/Global/Natural_Defense_Projects/MapServer/0",
-			"url1": "http://dev.services2.coastalresilience.org/arcgis/rest/services/Global/Natural_Defense_Projects/MapServer/6",
-			"lineSym0": [161,70,18,1],
-			"lineWidth": 1,
-			"opcaity": 0.25,
-			"outfields": ["*"]
-		},
-		{
-			"type": "iden"
-		}
-			
-        
-    ]
+			  ]
 }

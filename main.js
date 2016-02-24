@@ -1,6 +1,7 @@
 define([
         "dojo/_base/declare",
 		"framework/PluginBase",
+		"dojo/dnd/move",
 
 		"esri/request",
 		"esri/toolbars/draw",
@@ -68,6 +69,7 @@ define([
        ],
        function (declare,
 					PluginBase,
+					move,
 					ESRIRequest,
 					Drawer,
 					ArcGISDynamicMapServiceLayer,
@@ -176,17 +178,43 @@ define([
 						});
 						
 						on(this.featureLayer, "load", lang.hitch(this,this.loadedLayer))
-						on(this.featureLayer, "click", lang.hitch(this,function(evt){
-							console.log(evt.graphic.attributes);
-							alert(evt.graphic.attributes["Project_Name"]);
-		
-						}));
+						on(this.featureLayer, "click", lang.hitch(this,this.doInfo)); 
 						
 						this.map.addLayer(this.featureLayer);
-				
+						
+					}
+					
+					if (this.rendered == false) {
+						this.render();
 					}
 					
 			   },
+			   
+			   doInfo: function(evt){
+							console.log(evt.graphic.attributes);
+							
+							//alert(evt.graphic.attributes["Project_Name"]);
+
+							array.forEach(_fs_config.infos, lang.hitch(this,function(entry, i){
+								
+								HTMLOUT = "<span>"
+								array.forEach(entry.fields, lang.hitch(this,function(field, i){
+									
+									HTMLOUT = HTMLOUT + "<p style='margin-bottom:2px;'>" + field.name + ": " + evt.graphic.attributes[field.field] + "</p>"
+									
+								}));
+								
+								a = dom.byId(this.map.id + "_filterSelect_area_" + entry.name.replace(" ", "_").replace(" ", "_"));
+								a.innerHTML = HTMLOUT + "</span>"
+								//console.log(a);
+								//html.set(node, cont, params);						
+								
+							}));							
+						
+						domStyle.set(this.tabloc, "visibility", "visible");						
+		
+						},
+						
 			   
 			   loadedLayer: function(lay) {
 				   
@@ -247,11 +275,7 @@ define([
 						});
 						
 						on(this.featureLayer, "load", lang.hitch(this,this.loadedLayer))
-						on(this.featureLayer, "click", lang.hitch(this,function(evt){
-							console.log(evt.graphic.attributes);
-							alert(evt.graphic.attributes["Project_Name"]);
-		
-						}));
+						on(this.featureLayer, "click", lang.hitch(this,this.doInfo)); 
 						
 						this.map.addLayer(this.featureLayer);
 				 
@@ -274,13 +298,8 @@ define([
 					  mode: esri.layers.FeatureLayer.MODE_SELECTION,
 					  outFields: ["*"]
 					});
-	
 
-					on(this.featureLayer, "click", lang.hitch(this,function(evt){
-						console.log(evt.graphic.attributes);
-						alert(evt.graphic.attributes["Project_Name"]);
-	
-					}));
+					on(this.featureLayer, "click", lang.hitch(this,this.doInfo)); 
 					
 					this.map.addLayer(this.featureLayer);
 
@@ -298,6 +317,7 @@ define([
 
 					this.resetForm();
 					this.featureLayer = undefined;
+					domStyle.set(this.tabloc, "visibility", "hidden");
 
 			   },
 			   
@@ -561,15 +581,53 @@ define([
 
 					this.controlgroup2 = domConstruct.create("div", {innerHTML: "", "style": "width: 100%;padding-top:5px"});
 					
+					
 					this.mainArea.appendChild(this.controlgroup2);
 					
 					//nodeer = domConstruct.create("span", {innerHTML: "<br>Symbolize Projects By: ", "style": "width: 100%;margin-bottom:60px;overflow:hidden"});
 					
 					//this.mainArea.appendChild(nodeer);
+					
+
+/*					
+					
+
 										
-					parser.parse();
 
+					
+					
+					
+					alert(a);
+					
+					
 
+    var tc = new TabContainer({
+        style: "height: 100%; width: 100%;"
+    }, this.tabloc);
+
+    var cp1 = new ContentPane({
+         title: "Food",
+         content: "We offer amazing food"
+    });
+    tc.addChild(cp1);
+
+    var cp2 = new ContentPane({
+         title: "Drinks",
+         content: "We are known for our drinks."
+    });
+    tc.addChild(cp2);
+
+    tc.startup();
+					
+			var p = new ConstrainedMoveable(
+				tc, {
+				handle: tc,	
+				within: true
+			});
+parser.parse();
+
+alert('');
+*/
 				},
 
 
@@ -577,16 +635,63 @@ define([
 			     resize: function(w, h) {
 
 
+				 
 				 },
-
-
 
 
 
 
 				render: function() {
 
+				
+					this.tabloc = domConstruct.create("div", {innerHTML: '<div class="plugin-container-outer resizable claro"><div class="plugin-container" style="width: 420px; height: 300px;"><div id="' + this.map.id + "_filterSelect_Info_handle" + '"class="plugin-container-header"><h6>Information</h6><a id="' + this.map.id + "_filterSelect_info_closer" + '" href="javascript:;">✖</a></div><div id="' + this.map.id + "_filterSelect_main" + '"></div></div></div>', "style":"width:420px;height:300px;position:absolute; right:100px; top:70px;visibility: hidden"});
+					
+					mymap = dom.byId(this.map.id);
+					a = dojoquery(mymap).parent();
+					dojoquery(a)[0].appendChild(this.tabloc);
+					parser.parse();
+					
+					
+					moveable = new move.parentConstrainedMoveable(this.tabloc, {
+						handle: this.map.id + "_filterSelect_Info_handle",
+						area: "content",
+						within: true
+					});
 
+					parser.parse();
+					
+					tc = new TabContainer({
+						style: "height: 100%; width: 100%;"
+					}, this.map.id + "_filterSelect_main");
+
+					
+					array.forEach(_fs_config.infos, lang.hitch(this,function(entry, i){
+						
+						cp1 = new ContentPane({
+							 title: entry.name,
+							 content: "<div id='" + this.map.id + "_filterSelect_area_" + entry.name.replace(" ", "_").replace(" ", "_") + "'></div>"
+						});
+						tc.addChild(cp1);						
+						
+					}));
+
+
+
+					tc.startup();
+									
+
+				parser.parse();
+				
+				a = dom.byId(this.map.id + "_filterSelect_info_closer");
+				
+				
+					on(a, "click", lang.hitch(this,function(evt){
+						domStyle.set(this.tabloc, "visibility", "hidden");
+					}));
+					
+
+
+					this.rendered = true;
 
 				},
 
