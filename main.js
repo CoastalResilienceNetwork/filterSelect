@@ -357,7 +357,8 @@ define([
 					on(this.featureLayer, "load", lang.hitch(this,this.doSelection));	
 
 					//_fs_config.mapServer +"/" + SymbolLevel.id
-				   
+					this.map.graphics.remove(this.selectedGraphic);
+					domStyle.set(this.tabloc, "visibility", "hidden");				   
 			   },
 
                deactivate: function () {
