@@ -22,6 +22,7 @@ define([
 		"esri/symbols/SimpleMarkerSymbol",
 		"esri/geometry/Extent",
 		"esri/geometry/Polygon",
+		"esri/geometry/Point",
 		"esri/request",
 
 		"dijit/registry",
@@ -53,6 +54,7 @@ define([
 		"dojox/charting/widget/Legend",
 		"dojox/lang/functional",
 
+		"dojo/_base/Color",
 		"dojo/html",
 		"dojo/_base/array",
 		"dojo/aspect",
@@ -89,6 +91,7 @@ define([
 					SimpleMarkerSymbol,
 					Extent,
 					Polygon,
+					Point,
 					esriRequest,
 					registry,
 					Button,
@@ -117,6 +120,7 @@ define([
 					MiamiNice,
 					Legend,
 					dn,
+					Color,
 					html,
 					array,
 					aspect,
@@ -155,6 +159,7 @@ define([
 		_fs_config.pluginHeight = 500;
 
 	}	
+	
 
 	return declare(PluginBase, {
 		toolbarName:  _fs_config.pluginName,
@@ -178,7 +183,9 @@ define([
 						});
 						
 						on(this.featureLayer, "load", lang.hitch(this,this.loadedLayer))
-						on(this.featureLayer, "click", lang.hitch(this,this.doInfo)); 
+						on(this.featureLayer, "click", lang.hitch(this,this.doInfo));  
+						
+						this.map.graphics.remove(this.selectedGraphic);
 						
 						this.map.addLayer(this.featureLayer);
 						
@@ -190,7 +197,17 @@ define([
 					
 			   },
 			   
+			   
+
+			   
+			   
 			   doInfo: function(evt){
+				
+				this.map.graphics.remove(this.selectedGraphic);
+				pt = new Point(evt.graphic.geometry.x,evt.graphic.geometry.y,this.map.spatialReference)				
+				this.selectedGraphic = new Graphic(pt,this.pntSym);
+				this.map.graphics.add(this.selectedGraphic);
+				
 							console.log(evt.graphic.attributes);
 							
 							//alert(evt.graphic.attributes["Project_Name"]);
@@ -200,7 +217,33 @@ define([
 								HTMLOUT = "<span>"
 								array.forEach(entry.fields, lang.hitch(this,function(field, i){
 									
-									HTMLOUT = HTMLOUT + "<p style='margin-bottom:2px;'>" + field.name + ": " + evt.graphic.attributes[field.field] + "</p>"
+									outf = evt.graphic.attributes[field.field]
+							
+									if (field.field.indexOf("!") > -1) {
+										outFields = field.field.split("!");
+										
+										outf = "";
+										
+										array.forEach(outFields, lang.hitch(this,function(part, i){
+											
+											if ((i%2) == 0) {
+
+												outf = outf + part;
+											} else {
+												
+												outf = outf + evt.graphic.attributes[part]
+												
+											}
+											
+											
+										}));
+
+									}
+							
+									if (outf == null) {outf = ""}
+									if (outf == undefined) {outf = ""}
+									
+									HTMLOUT = HTMLOUT + "<p style='margin-bottom:2px;'><b>" + field.name + "</b>: " + outf + "</p>"
 									
 								}));
 								
@@ -248,6 +291,12 @@ define([
 						
 						}));
 						
+						array.forEach(_fs_config.queryFields, lang.hitch(this,function(entry, i){
+							
+							entry.values = entry.values.sort();
+							
+						}));	
+						
 						
 						console.log(_fs_config.queryFields);
 				 
@@ -282,6 +331,8 @@ define([
 					}
 					
 					this.addrow();
+					
+					this.map.graphics.remove(this.selectedGraphic);
 			   },
 			   
 			   changeSymbolLevel: function(SymbolLevel) {
@@ -318,6 +369,8 @@ define([
 					this.resetForm();
 					this.featureLayer = undefined;
 					domStyle.set(this.tabloc, "visibility", "hidden");
+					
+					this.map.graphics.remove(this.selectedGraphic);
 
 			   },
 			   
@@ -394,9 +447,9 @@ define([
 						rowtextmore = domConstruct.create("span", {innerHTML: " = ", "style": "position:absolute;top:32px;right:215px;font-size:30px;font-weight:bold"});
 						tag.appendChild(rowtextmore);
 
+						
 						seltag = domConstruct.create("select");
 						tag.appendChild(seltag);
-						
 						
 						parser.parse();
 						
@@ -464,15 +517,28 @@ define([
 				 
 					symbols = { single : {label : _fs_config.defaultLegendItem, symbol: sym}};
 				 
+				 } else {
+					 
+					tname = this.symbolButton.get("label"); 
 				 }
 				 
+				
+ 
+				symHTML = tname + "<br><span style='line-height: 20px;font-weight: normal'>";
 				 
-				symHTML = _fs_config.defaultLegendItem + "<br><span style='line-height: 20px;font-weight: normal'>";
+				TArray = new Array();
 				 
 				dn.forIn(symbols, function(ob) {
 						console.log(ob);
-						symHTML = symHTML + "<img src='" + ob.symbol.url + "' /> " + ob.label + "<br>"
+						TArray.push(ob.label);
+						//symHTML = symHTML + "<img src='" + ob.symbol.url + "' /> " + ob.label + "<br>"
 					});
+					
+				TArray = TArray.sort();
+				
+				array.forEach(TArray, lang.hitch(this,function(ob, i){
+					symHTML = symHTML + "<img src='" + symbols[ob].symbol.url + "' /> " + symbols[ob].label + "<br>"
+				}));
 				 
 				 symHTML = symHTML + "</span>"
 				 
@@ -584,6 +650,12 @@ define([
 					
 					this.mainArea.appendChild(this.controlgroup2);
 					
+					
+					this.pntSym = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18,
+								   new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+								   new Color([255,0,0]), 3),
+								   new Color([0,255,0,0]));
+								   
 					//nodeer = domConstruct.create("span", {innerHTML: "<br>Symbolize Projects By: ", "style": "width: 100%;margin-bottom:60px;overflow:hidden"});
 					
 					//this.mainArea.appendChild(nodeer);
@@ -687,6 +759,7 @@ alert('');
 				
 					on(a, "click", lang.hitch(this,function(evt){
 						domStyle.set(this.tabloc, "visibility", "hidden");
+						this.map.graphics.remove(this.selectedGraphic);
 					}));
 					
 
