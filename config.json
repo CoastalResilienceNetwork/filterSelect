@@ -3,11 +3,11 @@
 	"longPluginName": "Southern CT Regional Framework for Resilience Projects",
 	"pluginWidth": 420,
 	"pluginHeight": 400,
-	"infoGraphic": "cd_info.jpg",
+	"infoGraphic": "infog.jpg",
 	"legendName": "Habitat Type",
 	"globalText": "",
 	"buttons": [{"title": "Strategy Definitions", "url": "resources/docs/Strategy_Definitions.pdf"},{"title": "Project Type Definitions", "url": "resources/docs/Project_Type_Definitions.pdf"}],
-	"mainText": "Use the menu below to change symbology of the natural defense project points. Click any point to learn more about a project.",
+	"mainText": "Use this menu below to change the variety of CT resilience project points. Click any point to learn more about a project.",
 	"methods": "plugins/natural_defenses/Online_Database_Methods.pdf",
 	"projectDesc": "http://www.snap.is/groups/coastal-defenses/",
     "mapServer": "http://dev.services2.coastalresilience.org/arcgis/rest/services/Connecticut/Southern_CT_Projects/MapServer",
@@ -52,7 +52,7 @@
 				{"name":"Supplementary Info", "fields":[
 					{name: "Project Name", field: "Project_Name"},
 					{name: "Sources - References", field: "Plan_of_Ref_"},
-					{name: "Photos", field: "images_ID"}
+					{name: "Photos", field: "images|Project_Key"}
 					]
 				}
 			  ],
