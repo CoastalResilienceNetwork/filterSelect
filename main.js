@@ -257,7 +257,7 @@ define([
 									
 									outimage = ""
 									if (field.field.slice(0,6) == "images") {
-										fieldtoUse = field.field.split("_")
+										fieldtoUse = field.field.split("|")
 										Aimages = _fs_config.images[evt.graphic.attributes[fieldtoUse[1]]];
 										
 										if (Aimages != undefined) {
