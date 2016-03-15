@@ -239,9 +239,37 @@ define([
 										}));
 
 									}
-							
+									
 									if (outf == null) {outf = ""}
 									if (outf == undefined) {outf = ""}
+									
+									outfs = outf + ""
+									//console.log((outfs + "").slice(0,6));
+									
+									if (outfs.slice(0,6).indexOf("http") > -1) {
+										
+										if (outf[0] == "#") {
+											outf = outf.replace("#","");
+										}
+										outf = "<a href='" + outf + "' target='_blank'>" + outf + "</a>"
+									
+									}			
+									
+									outimage = ""
+									if (field.field.slice(0,6) == "images") {
+										fieldtoUse = field.field.split("_")
+										Aimages = _fs_config.images[evt.graphic.attributes[fieldtoUse[1]]];
+										
+										if (Aimages != undefined) {
+												array.forEach(Aimages, lang.hitch(this,function(im, i){
+													
+													imlink = localrequire.toUrl("./" + _fs_config.images["urlbase"] + "/" + im)
+													outimage = outimage + " <img src='" + imlink + "'>"
+												
+												}));
+										}
+											outf =  outimage
+									}
 									
 									HTMLOUT = HTMLOUT + "<p style='margin-bottom:2px;'><b>" + field.name + "</b>: " + outf + "</p>"
 									
@@ -523,8 +551,6 @@ define([
 					tname = this.symbolButton.get("label"); 
 				 }
 				 
-				
- 
 				symHTML = tname + "<br><span style='line-height: 20px;font-weight: normal'>";
 				 
 				TArray = new Array();
@@ -536,6 +562,8 @@ define([
 					});
 					
 				TArray = TArray.sort();
+				console.log('####')
+				console.log(TArray);
 				
 				array.forEach(TArray, lang.hitch(this,function(ob, i){
 					symHTML = symHTML + "<img src='" + symbols[ob].symbol.url + "' /> " + symbols[ob].label + "<br>"
@@ -601,9 +629,13 @@ define([
 					
 					this.container.appendChild(node2);
 					
-					var node = domConstruct.create("div", {"style": "width: 100%;height: 50px;position: absolute;bottom: 0;left: 0;text-align: center;background-color: #CCC; padding:10px;"});
+					this.buttonpane = domConstruct.create("div", {"style": "width: 100%;height: 50px;position: absolute;bottom: 0;left: 0;text-align: center;background-color: #CCC; padding:10px;"});
 					
-					this.container.appendChild(node);
+					this.container.appendChild(this.buttonpane);
+					
+					this.ButtonsLocation = domConstruct.create("span", {style: "float:right"});
+
+					this.buttonpane.appendChild(this.ButtonsLocation);
 					
 					this.mainArea = domConstruct.create("div", {innerHTML: _fs_config.mainText, "style": "width: 100%;padding:10px;"});
 					
@@ -654,8 +686,9 @@ define([
 					
 					this.pntSym = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18,
 								   new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-								   new Color([255,0,0]), 3),
+								   new Color([0,0,0]), 3),
 								   new Color([0,255,0,0]));
+								  
 								   
 					//nodeer = domConstruct.create("span", {innerHTML: "<br>Symbolize Projects By: ", "style": "width: 100%;margin-bottom:60px;overflow:hidden"});
 					
@@ -715,6 +748,19 @@ alert('');
 
 
 				render: function() {
+					
+					
+					array.forEach(_fs_config.buttons, lang.hitch(this,function(cbutton, i){
+
+						newButt = new Button({
+							label: cbutton.title,
+							onClick: lang.hitch(this,function(){window.open(localrequire.toUrl("./" + cbutton.url ))})  //function(){window.open(this.configVizObject.methods)}
+							});
+
+						this.ButtonsLocation.appendChild(newButt.domNode);
+
+
+					}));
 
 				
 					this.tabloc = domConstruct.create("div", {innerHTML: '<div class="plugin-container-outer resizable claro"><div class="plugin-container" style="width: 420px; height: 300px;"><div id="' + this.map.id + "_filterSelect_Info_handle" + '"class="plugin-container-header"><h6>Information</h6><a id="' + this.map.id + "_filterSelect_info_closer" + '" href="javascript:;">✖</a></div><div id="' + this.map.id + "_filterSelect_main" + '"></div></div></div>', "style":"width:420px;height:300px;position:absolute; right:100px; top:70px;visibility: hidden"});
