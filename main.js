@@ -44,6 +44,7 @@ define([
 		"dojo/dom-attr",
 		"dojo/dom-geometry",
 		"dijit/Dialog",
+		'dojox/layout/ResizeHandle',
 
 		"dojox/charting/Chart",
 		"dojox/charting/plot2d/Pie",
@@ -112,6 +113,7 @@ define([
 					domAttr,
 					domGeom,
 					Dialog,
+					ResizeHandle,
 					Chart,
 					Pie,
 					Highlight,
@@ -745,7 +747,38 @@ alert('');
 				 },
 
 
+			     resizeInfo: function(e) {
+					
+					resized = dom.byId(this.map.id + "_filterSelect_outer");
+					console.log(resized);
+					
+					w = domStyle.get(resized, "width");
+					h = domStyle.get(resized, "height");
+					
+					
+					large = dom.byId(this.map.id + "_filterSelect_large");
+					domStyle.set(large, "height", h + "px");
+					domStyle.set(large, "width", w + "px");
+					console.log(large);
+					
+					cnt = dom.byId(this.map.id + "_filterSelect_cont");
+					domStyle.set(cnt, "height", (h - 10) + "px");
+					domStyle.set(cnt, "width", (w - 10) + "px");
+					console.log(cnt);
 
+					cnt = dom.byId(this.map.id + "_filterSelect_cont");
+					domStyle.set(cnt, "height", (h - 10) + "px");
+					domStyle.set(cnt, "width", (w - 10) + "px");
+					console.log(cnt);
+					
+					this.tabc.resize({"w" : w-10, "h" : h-40})
+					
+					//alert(e);
+					this.tabc.layout()
+
+					
+					
+				 },
 
 				render: function() {
 					
@@ -763,14 +796,23 @@ alert('');
 					}));
 
 				
-					this.tabloc = domConstruct.create("div", {innerHTML: '<div class="plugin-container-outer resizable claro"><div class="plugin-container" style="width: 420px; height: 300px;"><div id="' + this.map.id + "_filterSelect_Info_handle" + '"class="plugin-container-header"><h6>Information</h6><a id="' + this.map.id + "_filterSelect_info_closer" + '" href="javascript:;">✖</a></div><div id="' + this.map.id + "_filterSelect_main" + '"></div></div></div>', "style":"width:420px;height:300px;position:absolute; right:100px; top:70px;visibility: hidden"});
+					this.tabloc = domConstruct.create("div", {innerHTML: '<div class="plugin-container-outer resizable claro" id="' + this.map.id + "_filterSelect_outer" + '"><div class="plugin-container" style="width: 420px; height: 300px;" id="' + this.map.id + "_filterSelect_cont" + '"><div id="' + this.map.id + "_filterSelect_Info_handle" + '"class="plugin-container-header"><h6>Information</h6><a id="' + this.map.id + "_filterSelect_info_closer" + '" href="javascript:;">✖</a></div><div id="' + this.map.id + "_filterSelect_main" + '"></div></div></div>', "style":"width:420px;height:300px;position:absolute; right:100px; top:70px;visibility: hidden", id: this.map.id + "_filterSelect_large", class: "claro"});
 					
 					mymap = dom.byId(this.map.id);
 					a = dojoquery(mymap).parent();
 					dojoquery(a)[0].appendChild(this.tabloc);
 					parser.parse();
+
 					
+					handle = new ResizeHandle({
+						targetId: this.map.id + "_filterSelect_outer" ,
+						activeResize: true,
+						animateSizing: false
+					});
 					
+					handle.placeAt(this.map.id + "_filterSelect_outer" );
+					handle.on('resize', lang.hitch(this,this.resizeInfo));
+				
 					moveable = new move.parentConstrainedMoveable(this.tabloc, {
 						handle: this.map.id + "_filterSelect_Info_handle",
 						area: "content",
@@ -779,7 +821,7 @@ alert('');
 
 					parser.parse();
 					
-					tc = new TabContainer({
+					this.tabc = new TabContainer({
 						style: "height: 100%; width: 100%;"
 					}, this.map.id + "_filterSelect_main");
 
@@ -790,13 +832,13 @@ alert('');
 							 title: entry.name,
 							 content: "<div id='" + this.map.id + "_filterSelect_area_" + entry.name.replace(" ", "_").replace(" ", "_") + "'></div>"
 						});
-						tc.addChild(cp1);						
+						this.tabc.addChild(cp1);						
 						
 					}));
 
 
 
-					tc.startup();
+					this.tabc.startup();
 									
 
 				parser.parse();
