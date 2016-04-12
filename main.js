@@ -397,11 +397,15 @@ define([
 
                hibernate: function () {
 
+                                      if (this.rendered == true) {
+
 					this.resetForm();
 					this.featureLayer = undefined;
 					domStyle.set(this.tabloc, "visibility", "hidden");
 					
 					this.map.graphics.remove(this.selectedGraphic);
+
+                                      }
 
 			   },
 			   
