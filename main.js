@@ -5,6 +5,7 @@ define([
 
 		"esri/request",
 		"esri/toolbars/draw",
+		"esri/layers/FeatureLayer",
 		"esri/layers/ArcGISDynamicMapServiceLayer",
 		"esri/layers/ArcGISTiledMapServiceLayer",
 		"esri/layers/ArcGISImageServiceLayer",
@@ -75,6 +76,7 @@ define([
 					move,
 					ESRIRequest,
 					Drawer,
+					FeatureLayer,
 					ArcGISDynamicMapServiceLayer,
 					ArcGISTiledMapServiceLayer,
 					ArcGISImageServiceLayer,
@@ -179,8 +181,8 @@ define([
 				
 					if (this.featureLayer == undefined) {
 					
-						this.featureLayer = new esri.layers.FeatureLayer(_fs_config.mapServer +"/" + 0,{
-						  mode: esri.layers.FeatureLayer.MODE_SELECTION,
+						this.featureLayer = new FeatureLayer(_fs_config.mapServer +"/" + 0,{
+						  mode: FeatureLayer.MODE_SELECTION,
 						  outFields: ["*"]
 						});
 						
@@ -190,6 +192,8 @@ define([
 						this.map.graphics.remove(this.selectedGraphic);
 						
 						this.map.addLayer(this.featureLayer);
+						
+						this.addrow();
 						
 					}
 					
@@ -291,10 +295,10 @@ define([
 			   
 			   loadedLayer: function(lay) {
 				   
-						var query = new esri.tasks.Query();
+						var query = new esriQuery();
 						query.where = "1=1";
 
-						this.featureLayer.selectFeatures(query,esri.layers.FeatureLayer.SELECTION_NEW, lang.hitch(this,function(result){this.updateFields(result)}))  
+						this.featureLayer.selectFeatures(query,FeatureLayer.SELECTION_NEW, lang.hitch(this,function(result){this.updateFields(result)}))  
 					
 			   },
 			   
@@ -348,8 +352,8 @@ define([
 					
 					if (clearLayer) {
 					
-						this.featureLayer = new esri.layers.FeatureLayer(_fs_config.mapServer +"/" + 0,{
-						  mode: esri.layers.FeatureLayer.MODE_SELECTION,
+						this.featureLayer = new FeatureLayer(_fs_config.mapServer +"/" + 0,{
+						  mode: FeatureLayer.MODE_SELECTION,
 						  outFields: ["*"]
 						});
 						
@@ -375,8 +379,8 @@ define([
 					}
 					
 					
-					this.featureLayer = new esri.layers.FeatureLayer(_fs_config.mapServer +"/" + SymbolLevel.id,{
-					  mode: esri.layers.FeatureLayer.MODE_SELECTION,
+					this.featureLayer = new FeatureLayer(_fs_config.mapServer +"/" + SymbolLevel.id,{
+					  mode: FeatureLayer.MODE_SELECTION,
 					  outFields: ["*"]
 					});
 
@@ -412,7 +416,7 @@ define([
 			   
 			   addrow: function() {
 
-
+						
 						fsrows = dojoquery(".fsrow");
 						rowscount = fsrows.length;
 						var fsrc = rowscount
@@ -576,8 +580,8 @@ define([
 				}));
 				 
 				 symHTML = symHTML + "</span>"
-				 
-				 this.legendContainer.innerHTML = symHTML;
+
+				this.legendContainer.innerHTML = symHTML;
 				
 					console.log("Changed");
 					fsrows = dojoquery(".fsrow");
@@ -609,14 +613,15 @@ define([
 					qwhere = (qwhere.replace(" And ", ""));
 					
 					console.log(qwhere);
-					query = new esri.tasks.Query();
+					query = new esriQuery();
 					if (qwhere == "") {
 						query.where = "1=1"
 					} else {
 						query.where = qwhere;
 					}
-						
-					this.featureLayer.selectFeatures(query,esri.layers.FeatureLayer.SELECTION_NEW) 
+
+					this.featureLayer.selectFeatures(query,FeatureLayer.SELECTION_NEW) 
+					
 				   
 			   },
 
