@@ -620,9 +620,9 @@ define([
 						query.where = qwhere;
 					}
 
-					this.featureLayer.selectFeatures(query,FeatureLayer.SELECTION_NEW) 
-					
-				   
+					this.featureLayer.selectFeatures(query,FeatureLayer.SELECTION_NEW)
+						// Trigger legend redraw.
+						.then(this.map.resize);
 			   },
 
 
