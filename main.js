@@ -632,9 +632,7 @@ define([
 
 				    domClass.add(this.container, "claro");
 				   
-					//parser.parse()
-			   
-					console.log(this);		
+					//parser.parse()	
 						
 					node2 = domConstruct.create("div", {innerHTML: "", "style": "width: 100%;margin-bottom:60px;overflow:hidden"});
 					
