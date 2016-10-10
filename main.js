@@ -269,7 +269,16 @@ define([
 										if (Aimages != undefined) {
 												array.forEach(Aimages, lang.hitch(this,function(im, i){
 													
-													imlink = localrequire.toUrl("./" + _fs_config.images["urlbase"] + "/" + im)
+													if ((_fs_config.images["urlbase"].slice(0,4)) == "http") {
+													
+														imlink = _fs_config.images["urlbase"] + "/" + im
+														
+													} else {
+														
+														imlink = localrequire.toUrl("./" + _fs_config.images["urlbase"] + "/" + im)
+													
+													}
+														
 													outimage = outimage + " <img src='" + imlink + "'>"
 												
 												}));

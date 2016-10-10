@@ -57,7 +57,7 @@
 				}
 			  ],
 	"images": {
-	            "urlbase": "resources/images",
+	            "urlbase": "https://s3-us-west-2.amazonaws.com/ow-maps/cn_filterSelect",
 				"1003": ["1003a.JPG", "1003b.JPG", "1003c.JPG", "1003d.JPG"],
 				"1004": ["1004a.JPG", "1004b.JPG"],
 				"1007": ["1007a.JPG"],
